@@ -191,15 +191,16 @@ func (sb *storageBlock) Reset() {
 type marshalType uint8
 
 const (
-	marshalTypePlain = marshalType(0)
-	marshalTypeZSTD  = marshalType(1)
+	marshalTypePlain marshalType = iota
+	marshalTypeZSTD
 )
 
 func checkMarshalType(mt marshalType) error {
-	if mt < 0 || mt > 1 {
-		return fmt.Errorf("marshalType must be in the range [0..1]; got %d", mt)
+	switch mt {
+	case marshalTypePlain, marshalTypeZSTD:
+		return nil
 	}
-	return nil
+	return fmt.Errorf("marshalType must be in the range [0..1]; got %d", mt)
 }
 
 func (ib *inmemoryBlock) isSorted() bool {
